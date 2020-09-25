@@ -6,6 +6,7 @@ Vue.config.productionTip = false;
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
+import router from './router'
 
 // Install BootstrapVue
 Vue.use(BootstrapVue);
@@ -15,5 +16,6 @@ Vue.use(IconsPlugin);
 // TODO: Add in the global SCSS files for Vue Bootstrap
 
 new Vue({
-  render: (h) => h(App),
+  router,
+  render: (h) => h(App)
 }).$mount("#app");
