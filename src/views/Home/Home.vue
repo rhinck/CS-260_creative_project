@@ -6,11 +6,11 @@
           id="input-1"
           type="email"
           required
-          placeholder="Enter email"
+          placeholder="Find an apartment"
           class="w-50"
         ></b-form-input>
         <b-button class="ml-2">
-          Submit
+          Search
         </b-button>
       </div>
     </b-jumbotron>
@@ -24,7 +24,7 @@
           />
         </b-col>
         <b-col cols="12" md="6" class="m-1">
-          <h3 class="my-3">Subheader</h3>
+          <h3 class="my-3">Find the perfect apartment - today</h3>
           <p class="my-4">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse velit
             placeat magnam natus animi earum dolores aliquid quas molestias

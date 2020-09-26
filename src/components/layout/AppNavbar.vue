@@ -8,8 +8,8 @@
       <b-navbar-nav class="m-3">
         <b-nav-item to="/">Home</b-nav-item>
         <b-nav-item to="/about">About</b-nav-item>
-        <b-nav-item href="#">Contact Us</b-nav-item>
-        <b-nav-item href="#">Product Page</b-nav-item>
+        <b-nav-item to="/contact-us">Contact Us</b-nav-item>
+        <b-nav-item to="/product-page">Find an Apartment</b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
