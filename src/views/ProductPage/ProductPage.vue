@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- Based off of: https://www.rentler.com/places-for-rent/ut/salt-lake-city/ -->
     <!-- Search bar -->
     <section class="searchbar px-2 w-100">
       <b-form-input placeholder="Location" class="mx-2"></b-form-input>

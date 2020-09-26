@@ -11,6 +11,7 @@
           style="color: black"
         ></i
       ></a>
+      <p class="mt-1">Made by: Dallin Davis and Robert Hinckley (2020)</p>
     </div>
   </div>
 </template>
