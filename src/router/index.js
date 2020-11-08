@@ -4,7 +4,8 @@ import VueRouter from "vue-router";
 import Home from "@/views/Home/Home.vue";
 import About from "@/views/About/About.vue";
 import ContactUs from "@/views/ContactUs/ContactUs.vue";
-import ProductPage from "@/views/ProductPage/ProductPage.vue";
+import Apartments from "@/views/Apartments/Apartments.vue";
+import Listing from "@/views/Listing/Listing.vue";
 
 Vue.use(VueRouter);
 
@@ -25,10 +26,17 @@ const routes = [
     component: ContactUs,
   },
   {
-    path: "/product-page",
-    name: "ProductPage",
-    component: ProductPage,
+    path: "/apartments/",
+    name: "Apartments",
+    component: Apartments,
+
   },
+  // TODO: Potentially nest this inside of apartments route in the future (refactor)
+  {
+    path: "/listing",
+    name: "Listing",
+    component: Listing
+  }
 ];
 
 const router = new VueRouter({
