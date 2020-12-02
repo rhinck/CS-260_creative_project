@@ -4,7 +4,9 @@
     <router-view></router-view>
     <!-- // TODO: Make component -->
     <div class="text-center my-5">
-      <a href="https://github.com/rhinck/CS-260_portfolio" target="_blank"
+      <a
+        href="https://github.com/rhinck/CS-260_creative_project"
+        target="_blank"
         ><i
           class="fa fa-2x fa-github"
           aria-hidden="true"
