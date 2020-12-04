@@ -36,7 +36,7 @@
           <div class="details-cols">
             <b-card v-for="detail in details" :key="detail.icon" class="">
               <b-row>
-                <i :class="`fa ${detail.icon} mx-2`"></i>
+                <i :class="`${getDetailIcon(detail.type)} mx-2`"></i>
                 <h5>{{ detail.description }}</h5>
               </b-row>
             </b-card>
@@ -104,6 +104,7 @@ export default {
       {
         icon: "fa-bed",
         description: "2 Bed",
+        type: "bed",
       },
       {
         icon: "fa-venus-mars",
@@ -129,6 +130,35 @@ export default {
   }),
   created() {
     console.log("The id is: " + this.$route.params.id);
+  },
+  methods: {
+    getDetailIcon(detailType) {
+      let detailIcon = "";
+
+      switch (detailType) {
+        case "Bed":
+          detailIcon = "fa-bed";
+          break;
+        case "Pet":
+          detailIcon = "fa-paw";
+          break;
+        case "Gender":
+          detailIcon = "fa-venus-mars";
+          break;
+        case "Pool":
+          detailIcon = "fa-tint";
+          break;
+        case "Bath":
+          detailIcon = "fa-bath";
+          break;
+        case "Size":
+          detailIcon = "fa-building";
+          break;
+        default:
+          console.error("Can't find detail type");
+      }
+      return detailIcon;
+    },
   },
   computed: {
     apartment() {
