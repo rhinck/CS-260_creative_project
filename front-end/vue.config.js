@@ -1,5 +1,10 @@
 module.exports = {
+  devServer: {
+    proxy: 'http://localhost:3000',
+    disableHostCheck: true
+  },
   chainWebpack: (config) => {
+    config.module.rules.delete('eslint');
     config.module
       .rule("vue")
       .use("vue-loader")

@@ -7,6 +7,7 @@ import ContactUs from "@/views/ContactUs/ContactUs.vue";
 import Apartments from "@/views/Apartments/Apartments.vue";
 import Listing from "@/views/Listing/Listing.vue";
 import CreateListing from "@/views/CreateListing/CreateListing.vue";
+import EditListing from "@/views/EditListing/EditListing.vue"
 
 Vue.use(VueRouter);
 
@@ -36,9 +37,14 @@ const routes = [
     name: "CreateListing",
     component: CreateListing,
   },
+  {
+    path: "/edit-listing/:id",
+    name: "EditListing",
+    component: EditListing
+  },
   // TODO: Potentially nest this inside of apartments route in the future (refactor)
   {
-    path: "/listing",
+    path: "/listing/:id",
     name: "Listing",
     component: Listing
   }

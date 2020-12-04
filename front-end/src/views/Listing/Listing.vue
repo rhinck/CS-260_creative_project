@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <b-container v-if="loaded">
     <b-row class="mt-5">
       <b-col cols="12" md="6">
         <div class="mx-3">
@@ -29,15 +29,53 @@
       <b-col class="d-flex flex-column align-items-center" cols="12" md="6">
         <h4>${{ apartment.price }}</h4>
         <br />
-        <b-button class="mx-3" block variant="primary" size="lg"
+        <b-button class="mx-3 text-white" block variant="primary" size="lg"
           >Contact Seller</b-button
         >
         <div class="mt-3">
           <div class="details-cols">
-            <b-card v-for="detail in details" :key="detail.icon" class="">
+            <b-card class="">
               <b-row>
-                <i :class="`${getDetailIcon(detail.type)} mx-2`"></i>
-                <h5>{{ detail.description }}</h5>
+                <v-icon small left class="mb-2">fa-bed</v-icon>
+                <h5>{{ apartment.details.beds }} Bedrooms</h5>
+              </b-row>
+            </b-card>
+
+            <b-card class="">
+              <b-row>
+                <v-icon small left class="mb-2"> fa-paw</v-icon>
+
+                <h5>
+                  {{ apartment.details.pets ? "Allowed" : "Not Allowed" }}
+                </h5>
+              </b-row>
+            </b-card>
+
+            <b-card class="">
+              <b-row>
+                <v-icon small left class="mb-2"> fa-venus-mars</v-icon>
+                <h5>{{ apartment.details.gender }}</h5>
+              </b-row>
+            </b-card>
+
+            <b-card class="">
+              <b-row>
+                <v-icon small left class="mb-2"> fa-tint</v-icon>
+                <h5>{{ apartment.details.pool ? "Has pool" : "No pool" }}</h5>
+              </b-row>
+            </b-card>
+
+            <b-card class="">
+              <b-row>
+                <v-icon small left class="mb-2"> fa-bath</v-icon>
+                <h5>{{ apartment.details.bath }} Bathrooms</h5>
+              </b-row>
+            </b-card>
+
+            <b-card class="">
+              <b-row>
+                <v-icon small left class="mb-2">fa-building</v-icon>
+                <h5>{{ apartment.details.size }} sq. ft.</h5>
               </b-row>
             </b-card>
           </div>
@@ -46,7 +84,7 @@
     </b-row>
     <b-row class="my-4">
       <h3 class="w-100 text-center">Description</h3>
-      <p>{{ apartment.listingDescription }}</p>
+      <p class="text-center">{{ apartment.listingDescription }}</p>
     </b-row>
     <b-row>
       <b-col>
@@ -54,7 +92,10 @@
         <b-row>
           <div class="my-2 column_wrapper">
             <ul>
-              <li v-for="amenity in propertyAmenities" :key="amenity">
+              <li
+                v-for="(amenity, index) in apartment.propertyAmenities"
+                :key="`${amenity}-${index}`"
+              >
                 {{ amenity }}
               </li>
             </ul>
@@ -62,7 +103,6 @@
         </b-row>
       </b-col>
     </b-row>
-    <div></div>
   </b-container>
 </template>
 
@@ -77,93 +117,26 @@
 </style>
 
 <script>
+import axios from "axios";
+
 export default {
   data: () => ({
-    propertyAmenities: [
-      "Alarm",
-      "Air Conditioning: Central Air",
-      "Deck",
-      "Dishwasher",
-      "Parking: Covered",
-      "Storage",
-      "View",
-      "Walk In Closets",
-      "Washer & Dryer: In Unit",
-      "Back Door Sensors",
-      "Distinctive Wood Style Flooring",
-      "Pull-Out Kitchen Faucet",
-      "Vivint Smart Home System",
-    ],
-    // .fa-bed
-    // .fa-paw
-    // .fa-bath
-    // .fa-tint (water)
-    // .fa-building (sq. ft)
-    // .fa-venus-mars
-    details: [
-      {
-        icon: "fa-bed",
-        description: "2 Bed",
-        type: "bed",
-      },
-      {
-        icon: "fa-venus-mars",
-        description: "Male",
-      },
-      {
-        icon: "fa-bath",
-        description: "2 Bath",
-      },
-      {
-        icon: "fa-paw",
-        description: "Allowed",
-      },
-      {
-        icon: "fa-tint",
-        description: "1 Pool",
-      },
-      {
-        icon: "fa-building",
-        description: "1000 sq. ft",
-      },
-    ],
+    apartment: {},
+    loaded: false,
   }),
   created() {
-    console.log("The id is: " + this.$route.params.id);
+    this.getApartment();
   },
   methods: {
-    getDetailIcon(detailType) {
-      let detailIcon = "";
-
-      switch (detailType) {
-        case "Bed":
-          detailIcon = "fa-bed";
-          break;
-        case "Pet":
-          detailIcon = "fa-paw";
-          break;
-        case "Gender":
-          detailIcon = "fa-venus-mars";
-          break;
-        case "Pool":
-          detailIcon = "fa-tint";
-          break;
-        case "Bath":
-          detailIcon = "fa-bath";
-          break;
-        case "Size":
-          detailIcon = "fa-building";
-          break;
-        default:
-          console.error("Can't find detail type");
+    async getApartment() {
+      try {
+        let id = this.$route.params.id;
+        let response = await axios.get(`/api/apartment/${id}`);
+        this.apartment = response.data;
+        this.loaded = true;
+      } catch (err) {
+        console.error(err);
       }
-      return detailIcon;
-    },
-  },
-  computed: {
-    apartment() {
-      const index = this.$route.params.id;
-      return this.$root.$data.apartments[index];
     },
   },
 };

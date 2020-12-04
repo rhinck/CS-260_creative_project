@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <h2 class="text-h2 text-center pb-5">Create a listing</h2>
-    <v-form
+    <h2 class="text-h2 text-center pb-5">Edit listing</h2>
+    <v-form v-if="loaded"
       ><v-row>
         <v-spacer></v-spacer>
         <v-col class="py-0" cols="12" md="6">
@@ -145,97 +145,78 @@
           />
         </v-col>
       </v-row>
-
-      <v-row>
-        <v-col cols="12">
-          <h4 class="text-h4">Apartment images</h4>
-        </v-col>
-        <v-col cols="12" md="6">
-          <small>Main image:</small>
-          <v-file-input
-            class="mt-2"
-            label="File input"
-            type="file"
-            name="photo"
-            outlined
-            dense
-            @change="fileChanged"
-          ></v-file-input>
-        </v-col>
-      </v-row>
       <div class="d-flex justify-center">
         <v-btn @click="submit" color="secondary" class="black--text" x-large
           >Submit</v-btn
         >
       </div>
+      <v-row>
+        <v-btn
+          class="ml-3 mb-2"
+          color="error"
+          dark
+          x-large
+          text
+          @click="deleteApartment()"
+          >Delete</v-btn
+        >
+      </v-row>
     </v-form>
   </v-container>
 </template>      
-
 
 <script>
 import axios from "axios";
 
 export default {
-  data() {
-    return {
-      file: "",
-      yesNoItems: [
-        { label: "Yes", value: true },
-        { label: "No", value: false },
-      ],
-      propertyAmenities: "",
-
-      form: {
-        title: "",
-        description: "",
-        listingDescription: "",
-        frontImg: "", // path to the image
-        carouselImgs: [],
-        price: "",
-        address: {
-          line1: "",
-          line2: "",
-        },
-        propertyAmenities: "",
-        // TODO: Rethink in the future
-        details: {
-          beds: 0,
-          pets: false,
-          gender: "", // Male Female
-          pool: false,
-          bath: 0,
-          size: 0,
-        },
-      },
-    };
+  data: () => ({
+    yesNoItems: [
+      { label: "Yes", value: true },
+      { label: "No", value: false },
+    ],
+    form: {},
+    loaded: false,
+    propertyAmenities: "",
+  }),
+  created() {
+    this.getApartment();
   },
   methods: {
     async submit() {
-      this.form.propertyAmenities = this.csvStringToArray;
+      this.form.propertyAmenities = this.csvStringToArray();
 
+      const id = this.$route.params.id;
       try {
-        debugger;
-        let formData = new FormData();
-        const fileName = this.file.name;
-        formData.append("photo", this.file, fileName);
-        console.log(this.file.name);
-
-        let r1 = await axios.post("/api/photos", formData);
-        this.form.frontImg = r1.data.path;
-
-        await axios.post("/api/apartment", this.form);
+        await axios.put(`/api/apartment/${id}`, this.form);
+        this.$router.push({ name: "Apartments" });
         alert("Success");
       } catch (err) {
         console.error(err);
       }
     },
-    fileChanged(event) {
-      console.log(event);
-      this.file = event;
+    async getApartment() {
+      try {
+        let id = this.$route.params.id;
+        let res = await axios.get(`/api/apartment/${id}`);
+        this.form = res.data;
+        const reducer = (accumulator, currentValue) =>
+          accumulator + `, ${currentValue}`;
+        this.propertyAmenities = this.form.propertyAmenities.reduce(reducer);
+
+        this.loaded = true;
+        return true;
+      } catch (err) {
+        console.error(err);
+      }
     },
-  },
-  computed: {
+    async deleteApartment() {
+      try {
+        await axios.delete(`/api/apartment/${this.$route.params.id}`);
+        this.$router.push({ name: "Apartments" });
+      } catch (err) {
+        console.error(err);
+      }
+    },
     csvStringToArray() {
       const arr = this.propertyAmenities.split(",").map((item) => item.trim());
 

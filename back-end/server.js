@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
@@ -40,14 +41,31 @@ const apartmentSchema = new mongoose.Schema({
   },
   propertyAmenities: [String],
   // TODO: Rethink in the future
-  details: [{
-      description: String,
-      type: String
-  }]
+  details: {
+    beds: Number,
+    pets: Boolean,
+    gender: String,
+    pool: Boolean,
+    bath: Number,
+    size: Number,
+  }
 });
 
 // Create a model for items in the museum.
 const Apartment = mongoose.model('Apartment', apartmentSchema);
+
+
+// Upload a photo. Uses the multer middleware for the upload and then returns
+// the path where the photo is stored in the file system.
+app.post('/api/photos', upload.single('photo'), async (req, res) => {
+  // Just a safety check
+  if (!req.file) {
+    return res.sendStatus(400);
+  }
+  res.send({
+    path: "/images/" + req.file.filename
+  });
+});
 
 
 // Return a list of all apartments
@@ -65,7 +83,7 @@ app.get('/api/apartments', async (req, res) => {
 // Get a specific apartment
 app.get('/api/apartment/:id', async (req, res) =>{
     try {
-      let apartment = Apartment.find({_id: req.params.id})
+      let apartment = await Apartment.findOne({_id: req.params.id})
       res.status(200).send(apartment)
     } catch (err) {
         console.error(err)
@@ -76,6 +94,7 @@ app.get('/api/apartment/:id', async (req, res) =>{
 // Create an apartment
 app.post('/api/apartment', async (req, res) => {
     try {
+      console.log("Route called (/api/apartment)")
       const { title, description, listingDescription, frontImg, carouselImgs, price, address, propertyAmenities, details } = req.body;
 
         const apartment = new Apartment({
@@ -90,10 +109,12 @@ app.post('/api/apartment', async (req, res) => {
           details,
         })
 
-        await Apartment.save();
+        await apartment.save();
+
         res.status(200).send("Happy")
     }
     catch (err) {
+      console.error(err);
         res.status(500);
     }
 })
@@ -102,7 +123,7 @@ app.post('/api/apartment', async (req, res) => {
 app.put('/api/apartment/:id', async (req, res) => {
     try {
        const { title, description, listingDescription, frontImg, carouselImgs, price, address, propertyAmenities, details } = req.body;
-       apartment = await Apartment.find({_id: req.params.id});
+       apartment = await Apartment.findOne({_id: req.params.id});
         
        apartment.title = title;
        apartment.description = description;

@@ -1,7 +1,11 @@
 <template>
   <div id="app">
     <AppNavbar />
-    <router-view></router-view>
+    <v-app>
+      <v-main>
+        <router-view></router-view>
+      </v-main>
+    </v-app>
     <!-- // TODO: Make component -->
     <div class="text-center my-5">
       <a

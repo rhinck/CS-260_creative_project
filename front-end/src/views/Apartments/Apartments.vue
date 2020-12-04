@@ -2,15 +2,15 @@
   <div>
     <!-- Based off of: https://www.rentler.com/places-for-rent/ut/salt-lake-city/ -->
     <!-- Search bar -->
-    <section class="searchbar px-2 w-100">
+    <!-- <section class="searchbar px-2 w-100">
       <b-form-input placeholder="Location" class="mx-2"></b-form-input>
       <b-form-input placeholder="Price" class="mx-2"></b-form-input>
       <b-form-input placeholder="Keyword" class="mx-2"></b-form-input>
       <b-button class="mx-2 mt-2 mt-md-0">Search</b-button>
-    </section>
+    </section> -->
     <b-row class="mx-1">
       <b-col cols="12" md="7">
-        <h1 class="text-center my-4">Apartments near you</h1>
+        <h1 class="text-center mb-4">Apartments near you</h1>
         <b-row>
           <b-col
             v-for="(apartment, index) in apartments"
@@ -19,13 +19,21 @@
             md="4"
             class="px-2"
           >
+            <v-btn
+              class="mb-2"
+              color="grey"
+              dark
+              @click="routeToEditView(apartment._id)"
+              >Edit</v-btn
+            >
+
             <b-card
-              :img-src="apartment.listingImg"
+              :img-src="apartment.frontImg"
               img-alt="Image"
               img-top
               style="max-width: 20rem"
               class="mb-2"
-              @click="routeToApartmentView(index)"
+              @click="routeToApartmentView(apartment._id)"
             >
               <h4>${{ apartment.price }}</h4>
 
@@ -60,19 +68,33 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
+  created() {
+    this.getApartments();
+  },
   methods: {
-    routeToApartmentView(index) {
-      console.log(index);
-      this.$router.push({ name: "Listing", params: { id: index } });
+    routeToApartmentView(id) {
+      console.log(id);
+      this.$router.push({ name: "Listing", params: { id: id } });
+    },
+    routeToEditView(id) {
+      console.log(id);
+      this.$router.push({ name: "EditListing", params: { id: id } });
+    },
+    async getApartments() {
+      try {
+        let response = await axios.get("/api/apartments");
+        this.apartments = response.data;
+        return true;
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
-  data: () => ({}),
-  computed: {
-    apartments() {
-      return this.$root.$data.apartments;
-    },
-  },
+  data: () => ({
+    apartments: [],
+  }),
 };
 </script>
 
